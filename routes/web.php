@@ -17,8 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('dashboard', 'App\Http\Controllers\DashboardController@show')
+        ->name('dashboard');
+    Route::get('admin/user/list', 'App\Http\Controllers\AdminController@list');
+});
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
