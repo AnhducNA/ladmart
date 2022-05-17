@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', 'App\Http\Controllers\DashboardController@show')
         ->name('dashboard');
-    Route::get('admin/user/list', 'App\Http\Controllers\AdminController@list');
+    Route::get('admin/user/list', 'App\Http\Controllers\AdminUserController@list');
 });
 
 

@@ -9,7 +9,7 @@ class AdminUserController extends Controller
 {
     function list()
     {
-        // return User::simplePaginate();
-        return view('admin.user.list');
+        $users = User::simplePaginate(5);
+        return view('admin.user.list', compact('users'));
     }
 }
