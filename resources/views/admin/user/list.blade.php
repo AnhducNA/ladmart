@@ -5,9 +5,9 @@
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
             <h5 class="m-0 ">Danh sách thành viên</h5>
-            <div class="form-search form-inline">
-                <form action="#">
-                    <input type="" class="form-control form-search" placeholder="Tìm kiếm">
+            <div class="form-inline">
+                <form action="">
+                    <input type="text" name="keyword" class="form-control form-search" placeholder="Tìm kiếm">
                     <input type="submit" name="btn-search" value="Tìm kiếm" class="btn btn-primary">
                 </form>
             </div>
@@ -41,6 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if(count($users) > 0)
                     <?php $t = 0 ?>
                     @foreach($users as $user)
                     <?php $t++ ?>
@@ -59,27 +60,17 @@
                         </td>
                     </tr>
                     @endforeach
+                    @else
+                    <tr>
+                        <td colspan="7" class="bg-white">
+                            <p>Không tìm thấy bản ghi</p>
+                        </td>
+                    </tr>
+                    @endif
+
                 </tbody>
             </table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">Trước</span>
-                            <span class="sr-only">Sau</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            {{$users->links()}}
         </div>
     </div>
 </div>
