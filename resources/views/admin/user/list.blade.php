@@ -3,11 +3,16 @@
 @section('content')
 <div id="content" class="container-fluid">
     <div class="card">
+        @if(session('status'))
+        <div class="alert alert-success">
+            {{session('status')}}
+        </div>
+        @endif
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
             <h5 class="m-0 ">Danh sách thành viên</h5>
             <div class="form-inline">
                 <form action="">
-                    <input type="text" name="keyword" class="form-control form-search" placeholder="Tìm kiếm">
+                    <input type="text" name="keyword" value="{{request()->input('keyword')}}" class="form-control form-search" placeholder="Tìm kiếm">
                     <input type="submit" name="btn-search" value="Tìm kiếm" class="btn btn-primary">
                 </form>
             </div>

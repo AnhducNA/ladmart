@@ -21,6 +21,9 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', 'App\Http\Controllers\DashboardController@show')
         ->name('dashboard');
     Route::get('admin/user/list', 'App\Http\Controllers\AdminUserController@list');
+    Route::get('admin/user/add', 'App\Http\Controllers\AdminUserController@add');
+    Route::post('admin/user/store', 'App\Http\Controllers\AdminUserController@store');
+    
 });
 
 
