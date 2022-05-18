@@ -23,7 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/user/list', 'App\Http\Controllers\AdminUserController@list');
     Route::get('admin/user/add', 'App\Http\Controllers\AdminUserController@add');
     Route::post('admin/user/store', 'App\Http\Controllers\AdminUserController@store');
-    
+    Route::get('admin/user/delete/{id}', 'App\Http\Controllers\AdminUserController@delete')
+    ->name('delete_user');
+
 });
 
 

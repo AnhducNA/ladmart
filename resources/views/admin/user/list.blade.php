@@ -60,8 +60,10 @@
                         <td>Admintrator</td>
                         <td>{{$user -> created_at}}</td>
                         <td>
+                            @if(auth()->id() != $user->id)
                             <a href="#" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                            <a href="#" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                            <a href="{{route('delete_user', $user->id)}}" onclick="return confirm('Bạn có chắc chắn muốn xóa bản ghi này ?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

@@ -51,6 +51,14 @@ class AdminUserController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
         return redirect('admin/user/list')->with('status', 'Đã thêm thành viên thành công');
-
+    }
+    function delete($id)
+    {
+        if (Auth::id() != $id) {
+            User::find($id)->delete();
+            return redirect('admin/user/list')->with('status', 'Đã xóa thành viên thành công');
+        } else {
+            return  redirect('admin/user/list')->with('status', 'Bạn không thể tự xóa mình ra khỏi hệ thống');
+        }
     }
 }
