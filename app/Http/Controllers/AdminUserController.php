@@ -71,4 +71,37 @@ class AdminUserController extends Controller
             return  redirect('admin/user/list')->with('status', 'Bạn không thể tự xóa mình ra khỏi hệ thống');
         }
     }
+    function action(Request $request)
+    {
+        $list_check = $request->input('list_check');
+        // return $request->input();
+        if ($list_check) {
+            // Loại bỏ thao tác với chính bản thân
+            foreach ($list_check as $k => $id) {
+                if (Auth::id() == $id) {
+                    // Loại bỏ người đăng nhập ra khỏi mảng 
+                    unset($list_check[$k]);
+                }
+            }
+
+            if (!empty($list_check)) {
+                // echo "<pre>";
+                // print_r($list_check);
+                $act = $request->input('act');
+                // echo $act;
+                if ($act == 'delete') {
+                    User::destroy($list_check);
+                    return redirect('admin/user/list')->with('status', 'Bạn đã xóa thành công');
+                } else if ($act == 'restore') {
+                    User::withTrashed()
+                        ->whereIn('id', $list_check)->restore();
+                    return redirect('admin/user/list')->with('status', 'Bạn đã khôi phục thành công');
+                }
+            } else {
+                return redirect('admin/user/list')->with('status', 'Bạn không thể thao tác trên tài khoản của bạn');
+            }
+        } else {
+            return redirect('admin/user/list')->with('status', 'Bạn cần chọn phần tử cần thực thi');
+        }
+    }
 }

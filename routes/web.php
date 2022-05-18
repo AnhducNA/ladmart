@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/user/store', 'App\Http\Controllers\AdminUserController@store');
     Route::get('admin/user/delete/{id}', 'App\Http\Controllers\AdminUserController@delete')
     ->name('delete_user');
+    Route::post('admin/user/action', 'App\Http\Controllers\AdminUserController@action');
 
 });
 
