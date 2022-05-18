@@ -15,9 +15,19 @@ class AdminUserController extends Controller
         if ($request->input('keyword')) {
             $keyword = $request->input('keyword');
         }
-        $users = User::where('name', 'LIKE', "%{$keyword}%")
-            ->simplePaginate(5);
-        return view('admin.user.list', compact('users'));
+        $status = $request->input('status');
+        if ($status == 'trash') {
+            $users = User::where('name', 'LIKE', "%{$keyword}%")
+                ->onlyTrashed()->orderBy('id')->simplePaginate(5);
+        } else {
+
+            $users = User::where('name', 'LIKE', "%{$keyword}%")
+                ->orderBy('id')->simplePaginate(5);
+        }
+        $count_user_active = User::count();
+        $count_user_trash = User::onlyTrashed()->count();
+        $count = [$count_user_active, $count_user_trash];
+        return view('admin.user.list', compact('users', 'count'));
     }
     function add()
     {
