@@ -9,14 +9,28 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware(function (Request $request, $next) {
+            session(['module_active' => 'user']);
+            return $next($request);
+        });
+    }
     function list(Request $request)
     {
         $keyword = "";
         if ($request->input('keyword')) {
             $keyword = $request->input('keyword');
         }
+        $list_act = [
+            'delete' => 'Xóa tạm thời',
+        ];
         $status = $request->input('status');
         if ($status == 'trash') {
+            $list_act = [
+                'restore' => 'Khôi phục',
+                'forceDelete' => 'Xóa vĩnh viễn',
+            ];
             $users = User::where('name', 'LIKE', "%{$keyword}%")
                 ->onlyTrashed()->orderBy('id')->simplePaginate(5);
         } else {
@@ -27,7 +41,7 @@ class AdminUserController extends Controller
         $count_user_active = User::count();
         $count_user_trash = User::onlyTrashed()->count();
         $count = [$count_user_active, $count_user_trash];
-        return view('admin.user.list', compact('users', 'count'));
+        return view('admin.user.list', compact('users', 'count', 'list_act'));
     }
     function add()
     {
@@ -96,6 +110,10 @@ class AdminUserController extends Controller
                     User::withTrashed()
                         ->whereIn('id', $list_check)->restore();
                     return redirect('admin/user/list')->with('status', 'Bạn đã khôi phục thành công');
+                } else if ($act == 'forceDelete') {
+                    User::withTrashed()
+                        ->whereIn('id', $list_check)->forceDelete();
+                    return redirect('admin/user/list')->with('status', 'Bạn đã đã xóa vĩnh viễn user thành công');
                 }
             } else {
                 return redirect('admin/user/list')->with('status', 'Bạn không thể thao tác trên tài khoản của bạn');
@@ -103,5 +121,37 @@ class AdminUserController extends Controller
         } else {
             return redirect('admin/user/list')->with('status', 'Bạn cần chọn phần tử cần thực thi');
         }
+    }
+
+    function edit($id)
+    {
+        $user = User::find($id);
+        return view('admin.user.edit', compact('user'));
+    }
+    function update(Request $request, $id)
+    {
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'password' => 'required|string|min:8|confirmed',
+
+            ],
+            [
+                'required' => ':attribute không được để trống',
+                'min' => ':attribute có độ dài ít nhất :min ký tự',
+                'max' => ':attributecó độ dài lớn nhất :max ký tự',
+                'confirmed' => 'xác nhận mật khẩu không thành công',
+            ],
+            [
+                'name' => 'Tên người dùng',
+                'password' => 'Mật khẩu',
+            ]
+        );
+        User::where('id', 'LIKE', $id)
+            ->update([
+                'name' => $request->input('name'),
+                'password' => Hash::make($request->input('password')),
+            ]);
+        return redirect('admin/user/list')->with('status', 'Đã cập nhật thành viên thành công');
     }
 }

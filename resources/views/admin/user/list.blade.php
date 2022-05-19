@@ -26,8 +26,10 @@
                 @csrf
                 <div class="form-action form-inline py-3">
                     <select name="act" class="form-control mr-1" id="">
-                        <option value="restore">Khôi phục</option>
-                        <option value="delete">Xóa</option>
+                        <option value="">Chọn</option>
+                        @foreach($list_act as $k => $act)
+                        <option value="{{$k}}">{{$act}}</option>
+                        @endforeach
                     </select>
                     <input type="submit" name="btn-search" value="Áp dụng" class="btn btn-primary">
                 </div>
@@ -64,8 +66,8 @@
                             <td>Admintrator</td>
                             <td>{{$user -> created_at}}</td>
                             <td>
+                                <a href="{{route('edit_user', $user->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
                                 @if(auth()->id() != $user->id)
-                                <a href="#" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
                                 <a href="{{route('delete_user', $user->id)}}" onclick="return confirm('Bạn có chắc chắn muốn xóa bản ghi này ?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
                                 @endif
                             </td>
